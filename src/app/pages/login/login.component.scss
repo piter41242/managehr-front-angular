@@ -1,0 +1,162 @@
+.login-container {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.42); // ← Opacidad aquí
+    z-index: -1;
+  }
+}
+
+.login-card {
+  display: flex;
+  width: 900px;
+  height: 550px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  flex-direction: row;
+}
+
+.form-section {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.246);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.welcome-section {
+  flex: 1;
+  background: linear-gradient(
+    to right,
+    rgba(45, 84, 206, 0.9),
+    rgba(37, 207, 243, 0.9)
+  );
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.welcome-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.social-icon i {
+  font-size: 1.5rem;
+  color: #0056d2;
+  transition: 0.3s;
+}
+
+.social-icon:hover i {
+  color: #69b9e8;
+}
+
+.login-fondo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(6px);
+  z-index: -1;
+}
+
+.form-section h1 {
+  color: white;
+}
+
+
+a.olvidar {
+  color: #ffffff;
+  transition: 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    color: #a1d8ff;
+    text-decoration: underline;
+  }
+}
+
+.welcome-section p {
+  color: #ffffff7c;
+  font-size: 1rem;
+}
+
+.welcome-section h2 {
+  color: #ffffff;
+  font-size: 2.5rem;
+}
+
+.welcome-section .btn-ofertas {
+  background: linear-gradient(to right, #29c3fd, #2360ff);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 30px;
+  font-weight: bold;
+  transition: 0.3s;
+
+
+  &:hover {
+    background: linear-gradient(to right, #2360ff, #29c3fd);
+    transform: scale(1.05);
+  }
+}
+
+span.text-muted {
+  color: #fafdff !important; // Cambia el color a blanco u otro si prefieres
+  font-size: 0.9rem; // Puedes ajustar el tamaño
+  font-weight: 500; // Opcional, para que se vea más definido
+  letter-spacing: 0.5px; // Ligero espaciado para más elegancia
+  margin-top: -5px;
+
+}
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-card {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+  }
+
+  .form-section,
+  .welcome-section {
+    flex: none;
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .welcome-section h2 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,561 @@
+:host {
+  display: block;
+}
+
+:root {
+  --sidebar-bg: #1a1a1a;
+  --text-color: #ffffff;
+  --active-color: #3b82f6;
+  --active-bg: rgba(59, 130, 246, 0.1);
+  --hover-bg: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar {
+  background: var(--sidebar-bg);
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  padding: 1rem 0.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+
+  img:first-child {
+    max-width: 180px;
+    height: auto;
+    cursor: pointer;
+    display: block;
+    transition: all 0.3s ease;
+  }
+
+  img:last-child {
+    display: none;
+    max-width: 40px;
+    height: auto;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+}
+
+.nav {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.nav-section {
+  margin-bottom: 1rem;
+
+  &.mt-auto {
+    margin-top: auto;
+  }
+}
+
+.nav-link {
+  color: var(--text-hover);
+  padding: 0.75rem 1rem !important;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+
+  i {
+    width: 20px;
+    text-align: center;
+    margin-right: 12px;
+    font-size: 1.1rem;
+  }
+
+  span {
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    color: var(--active-color) !important;
+    background: var(--active-bg);
+  }
+
+  &.active {
+    color: var(--active-color) !important;
+    background: var(--active-bg);
+    font-weight: 500;
+  }
+
+  &.logout {
+    color: #dc3545 !important;
+
+    &:hover {
+      background: rgba(220, 53, 69, 0.1);
+    }
+  }
+}
+
+.user-link {
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+
+  i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--active-color);
+  }
+
+  &.bottom-section {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem; // para que no quede pegado abajo
+  }
+
+  .user-info {
+    .name {
+      color: var(--active-color);
+      margin: 0;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .email {
+      color: var(--text-color);
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+  }
+}
+
+/* Submenú */
+.submenu {
+  padding-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.submenu .nav-link {
+  background-color: transparent;
+  font-size: 14px;
+  padding: 0.5rem 1rem !important;
+}
+
+.submenu .nav-link i {
+  font-size: 0.95rem;
+  margin-right: 10px;
+}
+
+.submenu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 1rem;
+}
+
+/* Colapsado */
+.sidebar-collapsed {
+  width: 70px;
+
+  .logo-container {
+    img:first-child {
+      display: none;
+    }
+
+    img:last-child {
+      display: block;
+    }
+  }
+
+  .nav-link,
+  .user-link {
+    padding: 0.75rem !important;
+    justify-content: center;
+
+    i {
+      margin-right: 0;
+    }
+
+    span,
+    .user-info {
+      display: none;
+    }
+  }
+}
+
+/* Responsive: fuerza colapso */
+@media (max-width: 945px) {
+  .sidebar {
+    width: 70px;
+
+    .logo-container {
+      img:first-child {
+        display: none;
+      }
+
+      img:last-child {
+        display: block;
+      }
+    }
+
+    .nav-link,
+    .user-link {
+      padding: 0.75rem !important;
+      justify-content: center;
+
+      i {
+        margin-right: 0;
+      }
+
+      span,
+      .user-info {
+        display: none;
+      }
+    }
+  }
+}
+
+/* Scroll */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.nav-link,
+.user-link {
+  animation: fadeIn 0.3s ease;
+}
+
+
+/* Colapsado */
+.sidebar-collapsed {
+  width: 70px;
+
+  .logo-container {
+    img:first-child {
+      display: none;
+    }
+
+    img:last-child {
+      display: block;
+    }
+  }
+
+  // Estilos para los elementos principales del menú (NO los submenús ni el toggle)
+  .nav-link:not(.submenu-toggle),
+  .user-link {
+    padding: 0.75rem !important;
+    justify-content: center; // Centra el contenido (el ícono principal)
+
+    i {
+      margin-right: 0; // Elimina el margen derecho del ícono principal
+      width: auto; // Ajusta el ancho si es necesario, aunque text-align: center ayuda
+    }
+
+    span,
+    .user-info {
+      display: none; // Oculta el texto
+    }
+  }
+
+  // Estilos para los ítems dentro del submenú cuando el sidebar está colapsado
+  .submenu {
+    padding-left: 0; // Quita el padding izquierdo del contenedor del submenú
+    gap: 0; // Ajusta el espacio entre los ítems del submenú si es necesario
+
+    .nav-link {
+      padding: 0.75rem !important; // Ajusta el padding si es necesario
+      justify-content: center; // Centra el contenido (el ícono del submenú)
+      text-align: center;
+
+      i {
+        margin-right: 0; // Elimina el margen derecho del ícono del submenú
+        padding: 0; // Elimina padding si existe
+         width: auto; // Ajusta el ancho si es necesario
+      }
+       span {
+        display: none; // Oculta el texto del ítem del submenú
+      }
+    }
+  }
+
+  // Estilo ESPECÍFICO para el ícono de FLECHA (el último <i>) dentro de submenu-toggle en el estado colapsado
+  .submenu-toggle i.fas:last-child {
+    font-size: 0.9rem; // Aquí haces la flecha más pequeña (ajusta el valor si lo necesitas)
+    margin-left: auto; // Mantiene el margen automático para empujarla a la derecha
+    width: auto; // Asegura que no tenga un ancho fijo que la corte
+  }
+
+  // Estilo para el ÍCONO PRINCIPAL (el primer <i>) dentro de submenu-toggle en el estado colapsado
+  .submenu-toggle i.fas:first-child {
+     font-size: 1.1rem; // Mantiene el tamaño original del ícono principal
+     margin-right: 0; // Elimina el margen derecho
+     width: auto; // Asegura que no tenga un ancho fijo que lo corte
+  }
+
+   // Oculta el texto del submenu-toggle en estado colapsado
+   .submenu-toggle span {
+      display: none;
+   }
+}
+
+/* Responsive: fuerza colapso en pantallas pequeñas */
+@media (max-width: 945px) {
+  .sidebar {
+    width: 70px;
+
+    .logo-container {
+      img:first-child {
+        display: none;
+      }
+
+      img:last-child {
+        display: block;
+      }
+    }
+
+     // Estilos para los elementos principales del menú (NO los submenús ni el toggle)
+    .nav-link:not(.submenu-toggle),
+    .user-link {
+      padding: 0.75rem !important;
+      justify-content: center; // Centra el contenido (el ícono principal)
+
+      i {
+        margin-right: 0; // Elimina el margen derecho del ícono principal
+        width: auto; // Ajusta el ancho si es necesario
+      }
+
+      span,
+      .user-info {
+        display: none; // Oculta el texto
+      }
+    }
+
+    // Estilos para los ítems dentro del submenú en pantallas pequeñas
+    .submenu {
+      padding-left: 0; // Quita el padding izquierdo
+      gap: 0;
+
+      .nav-link {
+        padding: 0.75rem !important;
+        justify-content: center; // Centra el contenido (el ícono del submenú)
+        text-align: center;
+
+        i {
+          margin-right: 0;
+          padding: 0;
+           width: auto;
+        }
+         span {
+          display: none;
+        }
+      }
+    }
+
+    // Estilo ESPECÍFICO para el ícono de FLECHA (el último <i>) dentro de submenu-toggle en pantallas pequeñas
+    .submenu-toggle i.fas:last-child {
+      font-size: 0.9rem; // Aquí haces la flecha más pequeña
+      margin-left: auto; // Mantiene el margen automático
+      width: auto; // Asegura que no tenga un ancho fijo
+    }
+
+     // Estilo para el ÍCONO PRINCIPAL (el primer <i>) dentro de submenu-toggle en pantallas pequeñas
+    .submenu-toggle i.fas:first-child {
+       font-size: 1.1rem; // Mantiene el tamaño original
+       margin-right: 0; // Elimina el margen derecho
+       width: auto; // Asegura que no tenga un ancho fijo
+    }
+
+    // Oculta el texto del submenu-toggle en pantallas pequeñas
+    .submenu-toggle span {
+       display: none;
+    }
+  }
+}
+
+/* Scroll */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.nav-link,
+.user-link {
+  animation: fadeIn 0.3s ease;
+}
+
+// Asegúrate de mantener el resto de tus estilos SCSS existentes que no se modificaron en este ejemplo.
+// Por ejemplo, las reglas generales para .nav, .nav-section, .nav-link (sin colapsar), .user-link (sin colapsar), etc.
+// Las he incluido parcialmente abajo para referencia, pero debes usar tus reglas completas originales.
+
+.nav {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.nav-section {
+  margin-bottom: 1rem;
+
+  &.mt-auto {
+    margin-top: auto;
+  }
+}
+
+.nav-link {
+  color: var(--text-hover);
+  padding: 0.75rem 1rem !important; // Padding general
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+
+  i {
+    width: 20px; // Ancho general del ícono
+    text-align: center;
+    margin-right: 12px; // Margen derecho general del ícono
+    font-size: 1.1rem; // Tamaño general del ícono
+  }
+
+  span {
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    color: var(--active-color) !important;
+    background: var(--active-bg);
+  }
+
+  &.active {
+    color: var(--active-color) !important;
+    background: var(--active-bg);
+    font-weight: 500;
+  }
+
+  &.logout {
+    color: #dc3545 !important;
+
+    &:hover {
+      background: rgba(220, 53, 69, 0.1);
+    }
+  }
+}
+
+.user-link {
+  padding: 0.75rem 1rem; // Padding general
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+
+  i {
+    width: 20px; // Ancho general del ícono
+    text-align: center;
+    font-size: 1.1rem; // Tamaño general del ícono
+    color: var(--active-color);
+  }
+
+  &.bottom-section {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+  }
+
+  .user-info {
+    .name {
+      color: var(--active-color);
+      margin: 0;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .email {
+      color: var(--text-color);
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+  }
+}
+
+/* Submenú */
+.submenu {
+  padding-left: 2rem; // Padding izquierdo general del submenú
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.submenu .nav-link {
+  background-color: transparent;
+  font-size: 14px; // Tamaño de fuente general de los ítems del submenú
+  padding: 0.5rem 1rem !important; // Padding general de los ítems del submenú
+}
+
+.submenu .nav-link i {
+  font-size: 0.95rem; // Tamaño de ícono general de los ítems del submenú
+  margin-right: 10px; // Margen derecho general de los íconos del submenú
+}
+
+.submenu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; // Espacio entre el ícono principal/texto y la flecha
+  padding-right: 1rem; // Padding derecho general
+}

@@ -1,0 +1,170 @@
+<div class="layout">
+  <!-- Sidebar / Menú lateral -->
+  <aside class="sidebar" [class.sidebar-collapsed]="isCollapsed">
+    <div class="logo-container">
+      <img src="https://i.postimg.cc/BnHG09W1/logo.png" alt="Logo Desktop" class="logo-desktop" routerLink="/home" routerLinkActive="active">
+      <img src="https://i.postimg.cc/XJjkMhDq/logo.png" alt="Logo Mobile" class="logo-mobile">
+    </div>
+
+    <nav class="nav">
+      <!-- Directorio Inicio -->
+      <div *ngIf="[1, 4].includes(usuario?.rol)" class="nav-link submenu-toggle" (click)="toggleSubmenu()">
+        <i class="fas fa-address-book"></i>
+        <span>Directorio</span>
+        <i class="fas" [ngClass]="{'fa-chevron-down': !isSubmenuOpen, 'fa-chevron-up': isSubmenuOpen}" style="margin-left:auto;"></i>
+      </div>
+
+      <!-- Submenú desplegable -->
+      <div *ngIf="isSubmenuOpen && [1, 4].includes(usuario?.rol)" class="submenu">
+        <a class="nav-link" (click)="navigateTo('/directorio/usuarios')" [class.active]="isActive('/directorio/usuarios')">
+          <i class="fas fa-user"></i>
+          <span>Usuarios</span>
+        </a>
+        <a class="nav-link" (click)="navigateTo('/directorio/contratos')" [class.active]="isActive('/directorio/contratos')">
+          <i class="fas fa-file-contract"></i>
+          <span>Contratos</span>
+        </a>
+        <a class="nav-link" (click)="navigateTo('/directorio/area')" [class.active]="isActive('/directorio/area')">
+          <i class="fas fa-building"></i>
+          <span>Área</span>
+        </a>
+        <a class="nav-link" (click)="navigateTo('/directorio/trazabilidad')" [class.active]="isActive('/directorio/trazabilidad')">
+          <i class="fas fa-route"></i>
+          <span>Trazabilidad</span>
+        </a>
+      </div>
+      <!-- Directorio Fin -->
+
+
+      <!-- Vacantes Inicio -->
+
+      <div *ngIf="[1, 4].includes(usuario?.rol)" class="nav-link submenu-toggle" (click)="toggleSubmenuVacantes()">
+        <i class="fas fa-briefcase"></i>
+        <span>Vacantes</span>
+        <i class="fas" [ngClass]="{'fa-chevron-down': !isSubmenuVacantesOpen, 'fa-chevron-up': isSubmenuVacantesOpen}" style="margin-left:auto;"></i>
+      </div>
+
+      <div *ngIf="isSubmenuVacantesOpen && [1, 4].includes(usuario?.rol)" class="submenu">
+        <a class="nav-link" (click)="navigateTo('/vacantes copy/gestion')" [class.active]="isActive('/vacantes copy/gestion')">
+          <i class="fas fa-cog"></i> <span>Gestión</span>
+        </a>
+        <a class="nav-link" (click)="navigateTo('/vacantes copy/categoria-vacantes')" [class.active]="isActive('/vacantes copy/categoria-vacantes')">
+          <i class="fas fa-layer-group"></i>
+          <span>Categoría</span>
+        </a>
+        <a class="nav-link" (click)="navigateTo('/vacantes copy/postulaciones')" [class.active]="isActive('/vacantes copy/postulaciones')">
+          <i class="fas fa-file-alt"></i>
+          <span>Postulaciones</span>
+        </a>
+      </div>
+      <!-- Vacantes Fin -->
+
+      <!-- Resto del menú -->
+      <a *ngIf="[2, 3, 5].includes(usuario?.rol)" class="nav-link" (click)="navigateTo('/home')" [class.active]="isActive('/home')">
+        <i class="fas fa-user"></i>
+        <span>Perfil</span>
+      </a>
+
+      <a class="nav-link" *ngIf="[3, 5].includes(usuario?.rol)" (click)="navigateTo('/hoja-de-vida')" [class.active]="isActive('/hoja-de-vida')">
+        <i class="fas fa-file-alt"></i>
+        <span>Hoja de Vida</span>
+      </a>
+
+      <a class="nav-link" *ngIf="usuario?.rol === 2" (click)="navigateTo('/jefe-personal')" [class.active]="isActive('/jefe-personal')">
+        <i class="fas fa-users"></i>
+        <span>Empleados</span>
+      </a>
+
+      <a class="nav-link" *ngIf="[2, 3, 5].includes(usuario?.rol)" (click)="navigateTo('/vacantes')" [class.active]="isActive('/vacantes')">
+        <i class="fas fa-briefcase"></i>
+        <span>Vacantes</span>
+      </a>
+      <a class="nav-link" *ngIf="[6].includes(usuario?.rol)" (click)="navigateTo('/vacantes')" [class.active]="isActive('/vacantes')">
+        <i class="fas fa-briefcase"></i>
+        <span>Vacantes</span>
+      </a>
+      <a class="nav-link" *ngIf="[1, 4].includes(usuario?.rol)" (click)="navigateTo('/vacaciones')" [class.active]="isActive('/vacaciones')">
+        <i class="fas fa-suitcase"></i>
+        <span>Vacaciones</span>
+      </a>
+      <a class="nav-link" *ngIf="[3].includes(usuario?.rol)" (click)="navigateTo('/formvacaciones')" [class.active]="isActive('/formvacaciones')">
+        <i class="fas fa-suitcase"></i>
+        <span>Vacaciones</span>
+      </a>
+      <a class="nav-link" *ngIf="[2].includes(usuario?.rol)" (click)="navigateTo('/vacaciones-jefe')" [class.active]="isActive('/vacaciones-jefe')">
+        <i class="fas fa-suitcase"></i>
+        <span>Vacaciones</span>
+      </a>
+      <!-- <a class="nav-link" *ngIf="[2].includes(usuario?.rol)" (click)="navigateTo('/incapacidades')" [class.active]="isActive('/incapacidades')">
+        <i class="fa-solid fa-heart-pulse"></i>
+        <span>Incapacidades</span>
+      </a> -->
+      <a class="nav-link" *ngIf="[3].includes(usuario?.rol)" (click)="navigateTo('/form-incapacidades')" [class.active]="isActive('/form-incapacidades')">
+        <i class="fa-solid fa-heart-pulse"></i>
+        <span>Incapacidades</span>
+      </a>
+      <a class="nav-link" *ngIf="[1,4].includes(usuario?.rol)" (click)="navigateTo('/incapacidades-admin')" [class.active]="isActive('/incapacidades-admin')">
+        <i class="fa-solid fa-heart-pulse"></i>
+        <span>Incapacidades</span>
+      </a>
+      <a class="nav-link" *ngIf="[2].includes(usuario?.rol)" (click)="navigateTo('/incapacidades-jefe')" [class.active]="isActive('/incapacidades-jefe')">
+        <i class="fa-solid fa-heart-pulse"></i>
+        <span>Incapacidades</span>
+      </a>
+<!--
+      <a class="nav-link" *ngIf="[2].includes(usuario?.rol)" (click)="navigateTo('/horas-extra')" [class.active]="isActive('/horas-extra')">
+        <i class="fas fa-calendar-plus"></i>
+        <span>Horas extra</span>
+      </a>-->
+      <a class="nav-link" *ngIf="[2].includes(usuario?.rol)" (click)="navigateTo('/horasextra-jefe')" [class.active]="isActive('/horasextra-jefe')">
+        <i class="fas fa-calendar-plus"></i>
+        <span>Horas Extra</span>
+      </a>
+      <a class="nav-link" *ngIf="[3].includes(usuario?.rol)" (click)="navigateTo('/form-horas')" [class.active]="isActive('/form-horas')">
+        <i class="fas fa-calendar-plus"></i>
+        <span>Horas extra</span>
+      </a>
+      <a class="nav-link" *ngIf="[1, 4].includes(usuario?.rol)" (click)="navigateTo('/horasextra-admin')" [class.active]="isActive('/horasextra-admin')">
+        <i class="fas fa-calendar-plus"></i>
+        <span>Horas extra</span>
+
+        <a class="nav-link" *ngIf="[8].includes(usuario?.rol)" (click)="navigateTo('/notificaciones-admin')" [class.active]="isActive('/vacaciones')">
+          <i class="fas fa-bell"></i>
+          <span>Notificaciones</span>
+        </a>
+      </a>
+      <a class="nav-link" *ngIf="[3, 5].includes(usuario?.rol)" (click)="navigateTo('/mis-postulaciones')" [class.active]="isActive('/mis-postulaciones')">
+        <i class="fas fa-clipboard-list"></i>
+        <span>Mis postulaciones</span>
+      </a>
+
+      <a class="nav-link"  (click)="navigateTo('/notificaciones-admin')" [class.active]="isActive('/notificaciones-admin')">
+        <i class="fas fa-bell"></i>
+        <span>Notificaciones</span>
+      </a>
+
+
+
+      <div class="nav-section mt-auto">
+        <a class="nav-link logout" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+        <br>
+        <div class="user-link bottom-section">
+          <i class="fas fa-user"></i>
+          <div class="user-info">
+            <p class="name">{{usuario.name}}</p>
+            <p class="email">{{usuario.email}}</p>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+  </aside>
+
+  <!-- Contenido dinámico cargado con router -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

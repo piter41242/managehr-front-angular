@@ -1,0 +1,201 @@
+<div class="layout">
+  <div class="contenido-principal">
+    <button type="button" class="btn-retorno" (click)="volver()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+
+    <!-- Encabezado -->
+    <div class="header-horas d-flex justify-content-between align-items-center">
+      <h3>Vacantes</h3>
+    </div>
+
+    <div class="row">
+      <!-- Lista de Vacantes -->
+      <div class="col-lg-8 col-md-12 pe-lg-4">
+        <div class="vacantes-list">
+          <div *ngIf="vacantes.length === 0" class="text-muted text-center py-4">
+            No hay vacantes disponibles en este momento.
+          </div>
+
+          <div
+            class="vacante-item"
+            *ngFor="let vacante of vacantes"
+            (click)="seleccionarVacante(vacante)"
+            [class.active]="vacanteSeleccionada?.titulo === vacante.titulo"
+          >
+            <div class="d-flex align-items-center flex-grow-1">
+              <div class="vacante-avatar me-3">
+                <img
+                  [src]="vacante.imagen || 'https://cdn-icons-png.flaticon.com/512/2721/2721297.png'"
+                  [alt]="vacante.titulo"
+                  class="rounded-circle"
+                />
+              </div>
+              <div class="vacante-info">
+                <h5 class="mb-1">{{ vacante.titulo }}</h5>
+                <p class="mb-0">{{ vacante.salario }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de Detalles -->
+      <div class="col-lg-4 col-md-12" *ngIf="vacanteSeleccionada">
+        <div class="detalles-panel">
+          <h4 class="detalles-title text-center mb-4">
+            {{ vacanteSeleccionada.titulo }}
+          </h4>
+
+          <div class="detalles-section">
+            <h5 class="section-title">Descripción</h5>
+            <p>{{ vacanteSeleccionada.descripcion }}</p>
+          </div>
+
+          <div class="detalles-section">
+            <h5 class="section-title">Salario</h5>
+            <p class="salary">{{ vacanteSeleccionada.salario }}</p>
+          </div>
+
+          <div class="detalles-section">
+            <h5 class="section-title">Requisitos</h5>
+            <ul class="requirements-list">
+              <li *ngFor="let req of vacanteSeleccionada.requisitos">
+                {{ req }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="boton-postularme text-center">
+            <button
+              type="button"
+              class="btn btn-postularme"
+              data-bs-toggle="modal"
+              data-bs-target="#postulacionModal"
+            >
+              Regístrate para postularte
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Registro -->
+<div
+  class="modal fade"
+  id="postulacionModal"
+  tabindex="-1"
+  aria-labelledby="postulacionModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="postulacionModalLabel">
+          Formulario de Registro
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form #registroForm="ngForm" (ngSubmit)="enviarFormulario()">
+          <div class="mb-3">
+            <label for="numDocumento" class="form-label">Número de documento</label>
+            <input
+              type="text"
+              class="form-control"
+              id="numDocumento"
+              name="numDocumento"
+              required
+              [(ngModel)]="numDocumento"
+              placeholder="Ingrese su número de documento"
+              (keypress)="soloNumeros($event)"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre completo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              required
+              [(ngModel)]="nombre"
+              placeholder="Nombre completo"
+              (keypress)="soloLetras($event)"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              required
+              [(ngModel)]="email"
+              placeholder="ejemplo@correo.com"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="confirmEmail" class="form-label">Confirmar correo electrónico</label>
+            <input
+              type="email"
+              class="form-control"
+              id="confirmEmail"
+              name="confirmEmail"
+              required
+              [(ngModel)]="confirmarEmail"
+              placeholder="Repite tu correo"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              required
+              [(ngModel)]="password"
+              placeholder="********"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPassword"
+              name="confirmPassword"
+              required
+              [(ngModel)]="confirmarPassword"
+              placeholder="********"
+            />
+          </div>
+
+          <div class="text-center mb-3" *ngIf="mensaje">
+            <span
+              [ngClass]="{
+                'text-success': registroExitoso,
+                'text-danger': !registroExitoso
+              }"
+            >
+              {{ mensaje }}
+            </span>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-success">Registrarme</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+<app-menu></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div class="header-horas d-flex justify-content-between align-items-center">
+      <h3>Vacantes</h3>
+      <button class="agregar-btn d-flex align-items-center" (click)="abrirModalAgregar()">
+        <i class="fas fa-plus-circle"></i> Agregar
+      </button>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-8 col-md-12 pe-lg-4">
+        <div class="vacantes-list">
+          <div 
+            class="vacante-item" 
+            *ngFor="let vacante of vacantes"
+            [class.active]="vacanteSeleccionada.id === vacante.id">
+            
+            <div class="d-flex align-items-center justify-content-between w-100">
+              <div 
+                class="vacante-info flex-grow-1" 
+                (click)="seleccionarVacante(vacante)">
+                <h5 class="mb-1">{{ vacante.titulo }}</h5>
+                <p class="mb-0">{{ vacante.salario }}</p>
+              </div>
+
+              <div class="d-flex gap-2 ms-3">
+                <button class="btn p-0" (click)="editarVacante(vacante)">
+                  <i class="bi bi-pencil-square text-primary fs-5"></i>
+                </button>
+                <button class="btn p-0" (click)="eliminarVacante(vacante)">
+                  <i class="bi bi-trash-fill text-danger fs-5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-12">
+        <div class="detalles-panel">
+          <h4 class="detalles-title text-center mb-4">{{ vacanteSeleccionada.titulo }}</h4>
+
+          <div class="detalles-section">
+            <h5 class="section-title">Descripción</h5>
+            <p>{{ vacanteSeleccionada.descripcion }}</p>
+          </div>
+
+          <div class="detalles-section">
+            <h5 class="section-title">Salario</h5>
+            <p class="salary">{{ vacanteSeleccionada.salario }}</p>
+          </div>
+
+          <div class="detalles-section">
+            <h5 class="section-title">Requisitos</h5>
+            <ul class="requirements-list">
+              <li *ngFor="let req of vacanteSeleccionada?.requisitos">{{ req }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Agregar -->
+      <div class="modal fade" id="modalAgregarVacante" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalAgregarLabel">Agregar Vacante</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="tituloVacante" class="form-label">Título</label>
+                  <input type="text" class="form-control" id="tituloVacante" placeholder="Ej. Desarrollador Frontend">
+                </div>
+
+                <div class="mb-3">
+                  <label for="salarioVacante" class="form-label">Salario</label>
+                  <input type="text" class="form-control" id="salarioVacante" placeholder="Ej. $5,000,000 COP">
+                </div>
+
+                <div class="mb-3">
+                  <label for="descripcionVacante" class="form-label">Descripción</label>
+                  <textarea class="form-control" id="descripcionVacante" rows="3" placeholder="Describe la vacante..."></textarea>
+                </div>
+
+                <div class="mb-3">
+                  <label for="requisitosVacante" class="form-label">Requisitos</label>
+                  <textarea class="form-control" id="requisitosVacante" rows="3" placeholder="Escribe los requisitos separados por coma"></textarea>
+                </div>
+              </form>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary">Guardar</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Editar -->
+      <div class="modal fade" id="modalEditarVacante" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalEditarLabel">Editar Vacante</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="tituloEditar" class="form-label">Título</label>
+                  <input type="text" class="form-control" id="tituloEditar" placeholder="Título de la vacante" [(ngModel)]="vacanteSeleccionada.titulo" name="tituloEditar">
+                </div>
+                <div class="mb-3">
+                  <label for="salarioEditar" class="form-label">Salario</label>
+                  <input type="text" class="form-control" id="salarioEditar" placeholder="Ej: $5,000,000 COP" [(ngModel)]="vacanteSeleccionada.salario" name="salarioEditar">
+                </div>
+                <div class="mb-3">
+                  <label for="descripcionEditar" class="form-label">Descripción</label>
+                  <textarea class="form-control" id="descripcionEditar" placeholder="Descripción de la vacante" [(ngModel)]="vacanteSeleccionada.descripcion" name="descripcionEditar"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="requisitosVacante" class="form-label">Requisitos</label>
+                  <textarea class="form-control" id="requisitosVacante" rows="3" placeholder="Escribe los requisitos separados por coma"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary">Guardar cambios</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

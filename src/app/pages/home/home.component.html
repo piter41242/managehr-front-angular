@@ -1,0 +1,153 @@
+<app-menu class="menu-lateral"></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div class="header-horas d-flex justify-content-between align-items-center">
+      <h3>Perfil de Usuario</h3>
+    </div>
+
+    <div class="profile-container" *ngIf="user">
+      <div class="profile-info">
+        <div class="profile-header">
+          <div class="profile-image-placeholder"></div>
+          <div class="user-details">
+            <h1 class="user-name">{{ user.primerNombre }} {{ user.primerApellido }}</h1>
+            <p class="user-handle">{{ user.usuario }}</p>
+          </div>
+        </div>
+
+        <div class="user-data">
+          <h4 class="data-title">Información Personal</h4>
+          <div class="data-grid">
+            <div class="grid-item">
+              <span class="label"><i class="fas fa-id-card"></i> Tipo de Documento:</span>
+              <span class="value">{{ user.tipoDocumento }}</span>
+            </div>
+            <div class="grid-item">
+              <span class="label"><i class="fas fa-passport"></i> Número de Documento:</span>
+              <span class="value">{{ user.numeroDocumento }}</span>
+            </div>
+            <div class="grid-item">
+              <span class="label"><i class="fas fa-calendar-alt"></i> Fecha de Nacimiento:</span>
+              <span class="value">{{ user.fechaNacimiento | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="grid-item">
+              <span class="label"><i class="fas fa-envelope"></i> Email:</span>
+              <span class="value">{{ user.email }}</span>
+            </div>
+            <div class="grid-item">
+              <span class="label"><i class="fas fa-map-marker-alt"></i> Dirección:</span>
+              <span class="value">{{ user.direccion }}</span>
+            </div>
+            <div class="grid-item">
+              <span class="label"><i class="fas fa-phone"></i> Teléfono:</span>
+              <span class="value">{{ user.telefono }}</span>
+            </div>
+            <div class="grid-item">
+              <span class="label"><i class="fas fa-venus-mars"></i> Género:</span>
+              <span class="value">{{ user.genero }}</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" (click)="openModal()">Actualizar Información</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" *ngIf="isModalVisible">
+      <div class="modal-content">
+        <button type="button" class="close-modal-button" (click)="closeModal()">
+          <i class="fas fa-times"></i>
+        </button>
+        <h2 class="modal-title">Actualizar Información Personal</h2>
+        <form (ngSubmit)="updateInfo()">
+          <!-- Campos deshabilitados -->
+          <div class="form-group">
+            <label for="primerNombre">Primer Nombre:</label>
+            <input type="text" id="primerNombre" name="primerNombre" class="form-control" [(ngModel)]="user.primerNombre" disabled>
+          </div>
+          <div class="form-group">
+            <label for="segundoNombre">Segundo Nombre:</label>
+            <input type="text" id="segundoNombre" name="segundoNombre" class="form-control" [(ngModel)]="user.segundoNombre" disabled>
+          </div>
+          <div class="form-group">
+            <label for="primerApellido">Primer Apellido:</label>
+            <input type="text" id="primerApellido" name="primerApellido" class="form-control" [(ngModel)]="user.primerApellido" disabled>
+          </div>
+          <div class="form-group">
+            <label for="segundoApellido">Segundo Apellido:</label>
+            <input type="text" id="segundoApellido" name="segundoApellido" class="form-control" [(ngModel)]="user.segundoApellido" disabled>
+          </div>
+          <div class="form-group">
+            <label for="tipoDocumento">Tipo de Documento:</label>
+            <select id="tipoDocumento" name="tipoDocumento" class="form-control" [(ngModel)]="user.tipoDocumento">
+              <option *ngFor="let e of tipoDocumentoLista" [value]="e.id">{{ e.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="numeroDocumento">Número de Documento:</label>
+            <input type="text" id="numeroDocumento" name="numeroDocumento" class="form-control" [(ngModel)]="user.numeroDocumento" disabled>
+          </div>
+          <div class="form-group">
+            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+            <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control" [(ngModel)]="user.fechaNacimiento" disabled>
+          </div>
+
+          <!-- Campos editables -->
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" [(ngModel)]="user.email">
+          </div>
+          <div class="form-group">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" class="form-control" [(ngModel)]="user.direccion">
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" name="telefono" class="form-control" [(ngModel)]="user.telefono">
+          </div>
+          <div class="form-group">
+            <label for="genero">Género:</label>
+            <select id="genero" name="genero" class="form-control" [(ngModel)]="user.genero"disabled>
+              <option *ngFor="let g of generoLista" [value]="g.id">{{ g.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="numeroHijos">Número de Hijos:</label>
+            <input type="number" id="numeroHijos" name="numeroHijos" class="form-control" [(ngModel)]="user.numeroHijos">
+          </div>
+          <div class="form-group">
+            <label for="contactoEmergencia">Contacto de Emergencia:</label>
+            <input type="text" id="contactoEmergencia" name="contactoEmergencia" class="form-control" [(ngModel)]="user.contactoEmergencia">
+          </div>
+          <div class="form-group">
+            <label for="numeroContactoEmergencia">Número de Contacto Emergencia:</label>
+            <input type="text" id="numeroContactoEmergencia" name="numeroContactoEmergencia" class="form-control" [(ngModel)]="user.numeroContactoEmergencia">
+          </div>
+          <div class="form-group">
+            <label for="eps">EPS:</label>
+            <select id="eps" name="eps" class="form-control" [(ngModel)]="user.eps">
+              <option *ngFor="let e of epsLista" [value]="e.codigo">{{ e.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="estadoCivil">Estado Civil:</label>
+            <select id="estadoCivil" name="estadoCivil" class="form-control" [(ngModel)]="user.estadoCivil">
+              <option *ngFor="let e of estadoCivilLista" [value]="e.id">{{ e.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pensiones">Pensiones:</label>
+            <select id="pensiones" name="pensiones" class="form-control" [(ngModel)]="user.pensiones">
+              <option *ngFor="let p of pensionesLista" [value]="p.codigo">{{ p.nombre }}</option>
+            </select>
+          </div>
+
+          <div class="modal-buttons">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

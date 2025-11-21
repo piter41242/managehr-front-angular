@@ -1,0 +1,208 @@
+<app-menu></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div class="header-horas d-flex justify-content-between align-items-center">
+      <h3>Gestión de Vacaciones - Jefe de Personal</h3>
+      <button class="btn btn-light btn-sm agregar-btn" (click)="cargarSolicitudes()">
+        <i class="fas fa-sync-alt"></i> Actualizar
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="mb-3">
+      <div class="row">
+        <div class="col-md-4">
+          <select 
+            class="form-control text-white border-0 py-2" 
+            [(ngModel)]="filtroEstado"
+            (change)="onFiltroEstadoChange()"
+            style="background-color: #1d2233; color: white; border: 1px solid #7a86a1;">
+            <option value="todos">Todos los estados</option>
+            <option value="pendiente">Pendientes</option>
+            <option value="aprobado">Aprobadas</option>
+            <option value="rechazado">Rechazadas</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <input 
+            type="text" 
+            class="form-control text-white border-0 py-2" 
+            placeholder="Buscar por nombre o documento..." 
+            [(ngModel)]="terminoBusqueda"
+            (input)="onBusquedaChange()"
+            style="background-color: #1d2233; color: white; border: 1px solid #7a86a1;">
+        </div>
+        <div class="col-md-2">
+          <button 
+            class="btn btn-light btn-sm w-100" 
+            (click)="cargarSolicitudes()">
+            <i class="fas fa-search"></i> Buscar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje de Error -->
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="error">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+      <button type="button" class="btn-close" (click)="error = ''"></button>
+    </div>
+
+    <!-- Loading -->
+    <div class="text-center" *ngIf="loading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-2 text-white">Cargando solicitudes...</p>
+    </div>
+
+    <!-- Tabla de Solicitudes -->
+    <div *ngIf="!loading">
+      <div class="table-responsive d-none d-md-block">
+        <table class="table table-striped table-bordered table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Empleado</th>
+              <th>Documento</th>
+              <th>Motivo</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Fin</th>
+              <th>Días</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let solicitud of solicitudesFiltradas">
+              <td>
+                <strong>{{ solicitud.empleado?.nombre }} {{ solicitud.empleado?.apellido }}</strong>
+              </td>
+              <td>{{ solicitud.empleado?.numDocumento }}</td>
+              <td>
+                <span class="text-truncate d-inline-block" style="max-width: 200px;" 
+                      [title]="solicitud.motivo">
+                  {{ solicitud.motivo }}
+                </span>
+              </td>
+              <td>{{ formatearFecha(solicitud.fechaInicio) }}</td>
+              <td>{{ formatearFecha(solicitud.fechaFinal) }}</td>
+              <td>
+                <span class="badge bg-info">{{ calcularDias(solicitud.fechaInicio, solicitud.fechaFinal) }} días</span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="getEstadoClass(solicitud.estado)">
+                  {{ getEstadoText(solicitud.estado) }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group" role="group" *ngIf="solicitud.estado === 'pendiente'">
+                  <button 
+                    class="btn btn-success btn-sm me-1" 
+                    (click)="seleccionarSolicitud(solicitud)"
+                    title="Aprobar solicitud">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button 
+                    class="btn btn-danger btn-sm" 
+                    (click)="seleccionarSolicitud(solicitud)"
+                    title="Rechazar solicitud">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <span class="text-muted" *ngIf="solicitud.estado !== 'pendiente'">
+                  {{ solicitud.estado === 'aprobado' ? 'Aprobada' : 'Rechazada' }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="solicitudesFiltradas.length === 0">
+              <td colspan="8" class="text-center text-muted py-4">
+                <i class="fas fa-inbox fa-2x mb-2"></i>
+                <p class="mb-0">No se encontraron solicitudes con los filtros aplicados</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tarjetas responsive -->
+      <div class="d-md-none">
+        <div class="row">
+          <div class="col-12 mb-3" *ngFor="let solicitud of solicitudesFiltradas">
+            <div class="card">
+              <div class="card-body">
+                <p><strong>Empleado:</strong> {{ solicitud.empleado?.nombre }} {{ solicitud.empleado?.apellido }}</p>
+                <p><strong>Documento:</strong> {{ solicitud.empleado?.numDocumento }}</p>
+                <p><strong>Motivo:</strong> {{ solicitud.motivo }}</p>
+                <p><strong>Inicio:</strong> {{ formatearFecha(solicitud.fechaInicio) }}</p>
+                <p><strong>Fin:</strong> {{ formatearFecha(solicitud.fechaFinal) }}</p>
+                <p><strong>Días:</strong> {{ calcularDias(solicitud.fechaInicio, solicitud.fechaFinal) }}</p>
+                <p><strong>Estado:</strong> 
+                  <span class="badge" [ngClass]="getEstadoClass(solicitud.estado)">
+                    {{ getEstadoText(solicitud.estado) }}
+                  </span>
+                </p>
+              </div>
+              <div class="card-footer d-flex justify-content-end gap-2" *ngIf="solicitud.estado === 'pendiente'">
+                <button class="btn btn-success btn-sm" (click)="seleccionarSolicitud(solicitud)">
+                  <i class="fas fa-check"></i> Aprobar
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="seleccionarSolicitud(solicitud)">
+                  <i class="fas fa-times"></i> Rechazar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Aprobar/Rechazar -->
+<div class="modal-custom" *ngIf="solicitudSeleccionada">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content custom-modal-content">
+      <div class="custom-modal-header">
+        <span><i class="fas fa-edit me-2"></i> Gestionar Solicitud de Vacaciones</span>
+        <button type="button" class="btn-close" (click)="cancelarAccion()"></button>
+      </div>
+      <div class="custom-modal-block mb-3">
+        <div><strong>Empleado:</strong> {{ solicitudSeleccionada.empleado?.nombre }} {{ solicitudSeleccionada.empleado?.apellido }}</div>
+        <div><strong>Documento:</strong> {{ solicitudSeleccionada.empleado?.numDocumento }}</div>
+        <div><strong>Período:</strong> {{ formatearFecha(solicitudSeleccionada.fechaInicio) }} - {{ formatearFecha(solicitudSeleccionada.fechaFinal) }}</div>
+        <div><strong>Días solicitados:</strong> {{ calcularDias(solicitudSeleccionada.fechaInicio, solicitudSeleccionada.fechaFinal) }}</div>
+      </div>
+      <div class="modal-body">
+        <label for="comentario" class="form-label">Comentario (opcional):</label>
+        <textarea 
+          id="comentario" 
+          class="form-control" 
+          rows="3" 
+          placeholder="Agregue un comentario sobre su decisión..."
+          [(ngModel)]="comentario"></textarea>
+      </div>
+      <div class="modal-footer custom-modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancelarAccion()">
+          <i class="fas fa-times me-1"></i>
+          Cancelar
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-success me-2" 
+          (click)="aprobarSolicitud(solicitudSeleccionada!)">
+          <i class="fas fa-check me-1"></i>
+          Aprobar
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-danger" 
+          (click)="rechazarSolicitud(solicitudSeleccionada!)">
+          <i class="fas fa-times me-1"></i>
+          Rechazar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

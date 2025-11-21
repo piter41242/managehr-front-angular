@@ -1,0 +1,264 @@
+/* Layout principal */
+.layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #202940;
+  }
+  
+  /* Menú lateral */
+  app-menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 240px;
+    z-index: 1000;
+  }
+  
+  /* Contenido principal */
+  .contenido-principal {
+    flex: 1;
+    margin-left: 280px;
+    padding: 30px;
+    min-height: 100vh;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    /* padding: 0 15px; */
+  }
+  
+  /* Header de notificaciones */
+  .header-horas {
+    background: linear-gradient(90deg, var(--color-principal), var(--active-color));
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin: 10px 0 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    h3 {
+      color: var(--text-hover);
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+  
+    .btn {
+      background: var(--text-hover);
+      color: var(--color-principal);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+  
+      &:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateY(-1px);
+      }
+    }
+  }
+  
+  /* Lista de notificaciones */
+  .notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* Notificación individual */
+  .notification {
+    background: var(--sidebar-bg);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+  
+    &:hover {
+      background: var(--active-bg);
+      transform: translateY(-1px);
+    }
+  }
+  
+  /* Contenido de la notificación */
+  .notification-content {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    gap: 15px;
+  }
+  
+  /* Avatar */
+  .notification-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* Información de la notificación */
+  .notification-info {
+    flex: 1;
+  
+    .user-name {
+      color: var(--active-color);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+  
+    .notification-text {
+      color: var(--text-hover);
+      font-size: 15px;
+    }
+  }
+  
+  /* Fecha de la notificación */
+  .notification-date {
+    color: var(--text-hover);
+    font-size: 0.85rem;
+    margin-right: 20px;
+    white-space: nowrap;
+  }
+  
+  /* Acciones de la notificación */
+  .notification-actions {
+    display: flex;
+    gap: 10px;
+  
+    .action-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-hover);
+      padding: 8px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      i {
+        font-size: 1.1rem;
+      }
+  
+      &:hover {
+        background: var(--active-bg);
+        
+        &.view {
+          color: var(--active-color);
+        }
+        
+        &.delete {
+          color: #dc3545;
+        }
+      }
+    }
+  }
+  
+  /* Modal de detalles */
+  .modal-content {
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-hover);
+  
+    .modal-header {
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem;
+  
+      .modal-title {
+        color: var(--active-color);
+        margin: 0;
+      }
+  
+      .btn-close {
+        filter: invert(1);
+      }
+    }
+  
+    .modal-body {
+      padding: 1rem;
+  
+      p {
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+      }
+  
+      strong {
+        color: var(--active-color);
+      }
+    }
+  
+    .modal-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 1rem;
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .contenido-principal {
+      margin-left: 70px;
+    }
+  
+    .notification-content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .notification-date {
+      margin: 5px 0;
+    }
+  
+    .notification-actions {
+      width: 100%;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+  }
+  
+  /* Scrollbar personalizada */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--sidebar-bg);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--active-color);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-principal);
+  }
+
+  
+    /* Modal de Desplazamiento Suave */
+.modal.fade {
+  transition: opacity 0.3s ease;
+}
+
+.modal-slide-in {
+  transform: translateY(-100vh); /* El modal comienza fuera de la pantalla */
+  animation: slideIn 0.5s forwards; /* Animación para deslizar el modal hacia abajo */
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(-100vh);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Ajustes de Modal */
+
+
+.modal-content {
+  animation: slideIn 1s forwards;
+}

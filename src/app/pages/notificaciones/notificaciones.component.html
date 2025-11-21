@@ -1,0 +1,71 @@
+<app-menu></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div class="container mt-4">
+      <div class="header-horas d-flex justify-content-between align-items-center">
+        <h3 class="text-hover">Notificaciones</h3>
+        <button class="btn btn-light btn-sm agregar-btn" (click)="generarReporte()">
+          Generar Reporte
+        </button>
+      </div>
+
+      <div class="notification-list">
+        <div class="notification" *ngFor="let notification of notifications">
+          <div class="notification-content">
+            <div class="notification-info">
+              <p class="user-name fw-bold">{{ notification.name }}</p>
+              <p class="notification-text">{{ notification.description }}</p>
+            </div>
+
+            <div class="notification-date">
+              {{ notification.date }}
+            </div>
+
+            <div class="notification-actions">
+              <button class="action-btn view" (click)="openDetailsModal(notification)">
+                <i class="fa fa-eye"></i>
+              </button>
+              <button class="action-btn delete" (click)="showDeleteAlert(notification)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" tabindex="-1" role="dialog"
+           [ngClass]="{'show': modalVisible}"
+           [ngStyle]="modalVisible ? {'display': 'block'} : {'display': 'none'}">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content custom-modal">
+            <div class="modal-header border-0">
+              <h5 class="modal-title text-primary">Detalles de la Notificación</h5>
+              <button type="button" class="btn-close btn-close-white" (click)="closeDetailsModal()"></button>
+            </div>
+            <div class="modal-body text-white">
+              <div class="mb-3">
+                <p class="fw-bold mb-0">{{ selectedNotification?.name }}</p>
+                <small>{{ selectedNotification?.date }}</small>
+              </div>
+              <p>{{ selectedNotification?.description }}</p>
+
+              <div *ngIf="selectedNotification?.extraDetails">
+                <p class="fw-bold mt-3">Detalles adicionales:</p>
+                <ul class="mb-0">
+                  <li *ngFor="let detail of selectedNotification.extraDetails">
+                    {{ detail }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="modal-footer border-0">
+              <button type="button" class="btn btn-success" (click)="aceptarNotificacion(selectedNotification)">Aceptar</button>
+              <button type="button" class="btn btn-danger" (click)="rechazarNotificacion(selectedNotification)">Rechazar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

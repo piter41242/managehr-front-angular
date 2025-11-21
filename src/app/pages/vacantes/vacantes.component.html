@@ -1,0 +1,171 @@
+<app-menu></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div class="header-horas d-flex justify-content-between align-items-center">
+      <h3>Vacantes</h3>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-8 col-md-12 pe-lg-4">
+        <div class="vacantes-list">
+          <div *ngIf="errorCargandoVacantes" class="alert alert-danger">
+            Error al cargar las vacantes. Por favor, inténtalo de nuevo más tarde.
+          </div>
+
+          <div *ngIf="!vacantes || vacantes.length === 0 && !errorCargandoVacantes">
+            No hay vacantes disponibles en este momento.
+          </div>
+
+          <div
+            class="vacante-item"
+            *ngFor="let vacante of vacantes"
+            (click)="seleccionarVacante(vacante)"
+            [class.active]="vacanteSeleccionada?.idVacantes === vacante.idVacantes">
+
+            <div class="d-flex align-items-center justify-content-between w-100">
+              <div
+                class="vacante-info flex-grow-1">
+                <h5 class="mb-1">{{ vacante.nomVacante }}</h5>
+                <p class="mb-0">{{ vacante.salario }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-12">
+        <div class="detalles-panel" *ngIf="vacanteSeleccionada && vacanteSeleccionada.idVacantes">
+           <h4 class="detalles-title text-center mb-4">{{ vacanteSeleccionada.nomVacante }}</h4>
+
+          <div class="detalles-section">
+            <h5 class="section-title">Cargo</h5>
+            <p>{{ vacanteSeleccionada.cargoVacante }}</p>
+          </div>
+
+           <div class="detalles-section">
+            <h5 class="section-title">Salario</h5>
+            <p class="salary">{{ vacanteSeleccionada.salario }}</p>
+          </div>
+
+           <div class="detalles-section">
+            <h5 class="section-title">Experiencia Mínima</h5>
+            <p>{{ vacanteSeleccionada.expMinima }}</p>
+          </div>
+
+
+          <div class="detalles-section">
+            <h5 class="section-title">Descripción</h5>
+            <p>{{ vacanteSeleccionada.descripVacante }}</p>
+          </div>
+
+          <div class="detalles-section">
+            <h5 class="section-title">Requisitos</h5>
+            <ul class="requirements-list">
+              <li *ngFor="let req of vacanteSeleccionada?.requisitos">{{ req }}</li>
+            </ul>
+            <p *ngIf="!vacanteSeleccionada?.requisitos || vacanteSeleccionada.requisitos.length === 0">No se especifican requisitos.</p>
+          </div>
+
+          <div class="mt-4 text-center">
+            <button class="btn btn-primary btn-lg" (click)="postularme()">Postularme</button>
+          </div>
+        </div>
+
+        <div class="detalles-panel" *ngIf="!vacanteSeleccionada || !vacanteSeleccionada.idVacantes">
+          <p class="text-center mt-4">Selecciona una vacante de la lista para ver los detalles.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAgregarVacante" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarLabel">Agregar Vacante</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="tituloVacante" class="form-label">Título</label>
+            <input type="hidden" class="form-control" id="tituloVacante" placeholder="Ej. Desarrollador Frontend" [(ngModel)]="vacanteSeleccionada.nomVacante" name="nomVacante">
+          </div>
+          <div class="mb-3">
+            <label for="salarioVacante" class="form-label">Salario</label>
+            <input type="text" class="form-control" id="salarioVacante" placeholder="Ej. $5,000,000 COP" [(ngModel)]="vacanteSeleccionada.salario" name="salario">
+          </div>
+          <div class="mb-3">
+            <label for="descripcionVacante" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcionVacante" rows="3" placeholder="Describe la vacante..." [(ngModel)]="vacanteSeleccionada.descripVacante" name="descripVacante"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="requisitosVacante" class="form-label">Requisitos</label>
+            <textarea class="form-control" id="requisitosVacante" rows="3" placeholder="Escribe los requisitos separados por coma" [(ngModel)]="vacanteSeleccionada.requisitos" name="requisitos"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalEditarVacante" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditarLabel">Editar Vacante</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="tituloEditar" class="form-label">Título</label>
+            <input type="text" class="form-control" id="tituloEditar" placeholder="Título de la vacante" [(ngModel)]="vacanteSeleccionada.nomVacante" name="nomVacanteEditar">
+          </div>
+          <div class="mb-3">
+            <label for="salarioEditar" class="form-label">Salario</label>
+            <input type="text" class="form-control" id="salarioEditar" placeholder="Ej: $5,000,000 COP" [(ngModel)]="vacanteSeleccionada.salario" name="salarioEditar">
+          </div>
+          <div class="mb-3">
+            <label for="descripcionEditar" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcionEditar" placeholder="Descripción de la vacante" [(ngModel)]="vacanteSeleccionada.descripVacante" name="descripVacanteEditar"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="requisitosVacante" class="form-label">Requisitos</label>
+            <textarea class="form-control" id="requisitosVacante" rows="3" placeholder="Escribe los requisitos separados por coma" [(ngModel)]="vacanteSeleccionada.requisitos" name="requisitosEditar"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" #confirmacionModal tabindex="-1" aria-labelledby="confirmacionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmacionModalLabel">Confirmar Postulación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas postularte a la vacante: <strong>{{ vacanteSeleccionada?.nomVacante }}</strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelarPostulacion()">No, Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="confirmarPostulacion()">Sí, Postularme</button>
+      </div>
+    </div>
+  </div>
+</div>

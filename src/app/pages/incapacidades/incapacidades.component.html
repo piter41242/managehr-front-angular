@@ -1,0 +1,189 @@
+<app-menu></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div class="card">
+      <div class="card-header header-vacaciones d-flex justify-content-between align-items-center">
+        <h3 class="m-0 text-hover">Incapacidades</h3>
+        <button class="btn btn-light btn-sm agregar-btn" (click)="agregarIncapacidad()">
+          <i class="fas fa-plus-circle icono-agregar"></i> Agregar
+        </button>
+      </div>
+      <div class="card-body">
+
+        <div *ngIf="isLargeScreen">
+          <div class="table-container">
+            <table class="table text-center">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Cargo</th>
+                  <th>Estado</th>
+                  <th>Total Días</th>
+                  <th>Fecha Inicio</th>
+                  <th>Fecha Final</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let incapacidad of incapacidades">
+                  <td>{{ incapacidad.nombre }}</td>
+                  <td>{{ incapacidad.cargo }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="{
+                      'badge-pendiente': incapacidad.estado === 'Pendiente',
+                      'badge-aprobado': incapacidad.estado === 'Aprobado',
+                      'badge-rechazado': incapacidad.estado === 'Rechazado'
+                    }">{{ incapacidad.estado }}</span>
+                  </td>
+                  <td>{{ incapacidad.totalDias }}</td>
+                  <td>{{ incapacidad.fechaInicio | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ incapacidad.fechaFinal | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <button class="btn btn-link btn-acciones editar me-1" (click)="editarIncapacidad(incapacidad)">
+                      <i class="fas fa-edit icono-editar"></i>
+                    </button>
+                    <button class="btn btn-link btn-acciones eliminar" (click)="eliminarIncapacidad(incapacidad.id)">
+                      <i class="fas fa-trash-alt icono-eliminar"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="!isLargeScreen" class="accordion-container-simple">
+          <div *ngFor="let incapacidad of incapacidades" class="accordion-item-simple">
+            <div class="accordion-header-simple" (click)="incapacidad.isExpanded = !incapacidad.isExpanded">
+              <div class="accordion-title-simple">{{ incapacidad.nombre }}</div>
+              <span class="accordion-icon-simple">
+                <i class="fas" [ngClass]="{'fa-chevron-down': !incapacidad.isExpanded, 'fa-chevron-up': incapacidad.isExpanded}"></i>
+              </span>
+            </div>
+            <div [class.expanded]="incapacidad.isExpanded" class="accordion-body-simple">
+              <div class="accordion-row-simple"><div class="row-label-simple">Cargo:</div><div class="row-value-simple">{{ incapacidad.cargo }}</div></div>
+              <div class="accordion-row-simple"><div class="row-label-simple">Estado:</div>
+                <div class="row-value-simple">
+                  <span class="badge" [ngClass]="{
+                    'badge-pendiente': incapacidad.estado === 'Pendiente',
+                    'badge-aprobado': incapacidad.estado === 'Aprobado',
+                    'badge-rechazado': incapacidad.estado === 'Rechazado'
+                  }">{{ incapacidad.estado }}</span>
+                </div>
+              </div>
+              <div class="accordion-row-simple"><div class="row-label-simple">Total Días:</div><div class="row-value-simple">{{ incapacidad.totalDias }}</div></div>
+              <div class="accordion-row-simple"><div class="row-label-simple">Fecha Inicio:</div><div class="row-value-simple">{{ incapacidad.fechaInicio | date:'dd/MM/yyyy' }}</div></div>
+              <div class="accordion-row-simple"><div class="row-label-simple">Fecha Final:</div><div class="row-value-simple">{{ incapacidad.fechaFinal | date:'dd/MM/yyyy' }}</div></div>
+              <div class="accordion-row-simple">
+                <div class="row-label-simple">Acciones:</div>
+                <div class="row-value-simple">
+                  <button class="btn btn-link btn-acciones editar me-1" (click)="editarIncapacidad(incapacidad)">
+                    <i class="fas fa-edit icono-editar"></i>
+                  </button>
+                  <button class="btn btn-link btn-acciones eliminar" (click)="eliminarIncapacidad(incapacidad.id)">
+                    <i class="fas fa-trash-alt icono-eliminar"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-end mt-3">
+          <button class="btn btn-primary" (click)="generarReporte()">Generar Reporte</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="editModalIncapacidad" class="modal fade" tabindex="-1" [ngClass]="{'show': modalAbierto, 'modal-slide-in': modalAbierto}" [ngStyle]="modalAbierto ? {'display': 'block'} : {'display': 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Incapacidad</h5>
+        <button type="button" class="btn-close" (click)="cancelarEdicion()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="nombreEditIncapacidad" class="form-label">Nombre</label>
+          <input [(ngModel)]="incapacidadEditada.nombre" type="text" class="form-control" id="nombreEditIncapacidad">
+        </div>
+        <div class="mb-3">
+          <label for="cargoEditIncapacidad" class="form-label">Cargo</label>
+          <input [(ngModel)]="incapacidadEditada.cargo" type="text" class="form-control" id="cargoEditIncapacidad">
+        </div>
+        <div class="mb-3">
+          <label for="totalDiasEditIncapacidad" class="form-label">Total Días</label>
+          <input [(ngModel)]="incapacidadEditada.totalDias" type="number" class="form-control" id="totalDiasEditIncapacidad">
+        </div>
+        <div class="mb-3">
+          <label for="fechaInicioEditIncapacidad" class="form-label">Fecha Inicio</label>
+          <input [(ngModel)]="incapacidadEditada.fechaInicio" type="date" class="form-control" id="fechaInicioEditIncapacidad">
+        </div>
+        <div class="mb-3">
+          <label for="fechaFinalEditIncapacidad" class="form-label">Fecha Final</label>
+          <input [(ngModel)]="incapacidadEditada.fechaFinal" type="date" class="form-control" id="fechaFinalEditIncapacidad">
+        </div>
+        <div class="mb-3">
+          <label for="estadoEditIncapacidad" class="form-label">Estado</label>
+          <select class="form-control" id="estadoEditIncapacidad" [(ngModel)]="incapacidadEditada.estado">
+            <option value="Pendiente">Pendiente</option>
+            <option value="Aprobado">Aprobado</option>
+            <option value="Rechazado">Rechazado</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarIncapacidad()">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="agregarModalIncapacidad" class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': mostrarAgregarModalIncapacidad}" [ngStyle]="mostrarAgregarModalIncapacidad ? {'display': 'block'} : {'display': 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar Incapacidad</h5>
+        <button type="button" class="btn-close" (click)="cerrarAgregarModalIncapacidad()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="nombreAgregarIncapacidad" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nombreAgregarIncapacidad" [(ngModel)]="nuevaIncapacidad.nombre">
+        </div>
+        <div class="mb-3">
+          <label for="cargoAgregarIncapacidad" class="form-label">Cargo</label>
+          <input type="text" class="form-control" id="cargoAgregarIncapacidad" [(ngModel)]="nuevaIncapacidad.cargo">
+        </div>
+        <div class="mb-3">
+          <label for="totalDiasAgregarIncapacidad" class="form-label">Total Días</label>
+          <input type="number" class="form-control" id="totalDiasAgregarIncapacidad" [(ngModel)]="nuevaIncapacidad.totalDias">
+        </div>
+        <div class="mb-3">
+          <label for="fechaInicioAgregarIncapacidad" class="form-label">Fecha Inicio</label>
+          <input type="date" class="form-control" id="fechaInicioAgregarIncapacidad" [(ngModel)]="nuevaIncapacidad.fechaInicio">
+        </div>
+        <div class="mb-3">
+          <label for="fechaFinalAgregarIncapacidad" class="form-label">Fecha Final</label>
+          <input type="date" class="form-control" id="fechaFinalAgregarIncapacidad" [(ngModel)]="nuevaIncapacidad.fechaFinal">
+        </div>
+        <div class="mb-3">
+          <label for="estadoAgregarIncapacidad" class="form-label">Estado</label>
+          <select class="form-control" id="estadoAgregarIncapacidad" [(ngModel)]="nuevaIncapacidad.estado">
+            <option value="Pendiente">Pendiente</option>
+            <option value="Aprobado">Aprobado</option>
+            <option value="Rechazado">Rechazado</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarAgregarModalIncapacidad()">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarNuevaIncapacidad()">Guardar</button>
+      </div>
+
+ 
+

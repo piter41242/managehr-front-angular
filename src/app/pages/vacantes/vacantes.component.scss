@@ -1,0 +1,336 @@
+/* src/app/components/vacantes/vacantes.component.scss */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #202940;
+}
+
+.contenido-principal {
+  flex: 1;
+  margin-left: 240px;
+  padding: 20px;
+}
+
+app-menu {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 16%;
+  height: 100%;
+  z-index: 100;
+}
+
+.header-horas {
+  background: linear-gradient(90deg, var(--color-principal), var(--active-color));
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+
+  h3 {
+    color: var(--text-hover);
+    margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+  }
+}
+
+.vacantes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.vacante-item {
+  background: var(--sidebar-bg);
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--active-bg);
+    transform: translateY(-2px);
+  }
+}
+
+.vacante-info {
+  h5 {
+    color: var(--text-hover);
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
+  p {
+    color: var(--active-color);
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+.detalles-panel {
+  background: var(--sidebar-bg);
+  border-radius: 8px;
+  padding: 20px;
+  height: 100%;
+
+  .detalles-title {
+    color: var(--text-hover);
+    font-size: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+  }
+
+  .detalles-section {
+    margin-top: 20px;
+
+    .section-title {
+      color: var(--active-color);
+      font-size: 16px;
+      margin-bottom: 10px;
+      background: rgba(59, 130, 246, 0.1);
+      padding: 8px;
+      border-radius: 4px;
+    }
+
+    p {
+      color: var(--text-color);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .salary {
+      color: var(--active-color);
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .requirements-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        color: var(--text-color);
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 14px;
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+
+  // Estilos para el botón "Postularme" dentro del panel
+  button.btn {
+    background: linear-gradient(90deg, var(--color-principal), var(--active-color));
+    color: white;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    padding: 10px 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+
+    &:hover {
+      cursor: pointer;
+      // Puedes agregar un efecto hover para el gradiente si lo deseas
+    }
+  }
+}
+
+
+// >>>>>>>> ESTILOS GENERALES PARA MODALES (EXISTENTES) <<<<<<<<
+// Estos estilos se aplican a .modal-content a menos que sean sobrescritos
+.modal-content {
+  background: var(--sidebar-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+
+  .modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+
+    .modal-title {
+      color: var(--text-hover);
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .btn-close {
+      filter: invert(1); // Invierte el color del icono de cerrar para fondos oscuros
+    }
+  }
+
+  .modal-body {
+    padding: 20px;
+    color: #fff;
+
+    .form-label {
+      color: var(--text-hover);
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-control {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-hover);
+      padding: 10px;
+
+      &:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: var(--active-color);
+        box-shadow: none;
+      }
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    textarea.form-control {
+      min-height: 100px;
+    }
+  }
+
+  .modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 15px 20px;
+
+    .btn {
+      padding: 8px 20px;
+      font-size: 14px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text-hover);
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    .btn-primary {
+      background-color: var(--active-color);
+      border: none;
+
+      &:hover {
+        background-color: var(--color-principal);
+      }
+    }
+  }
+}
+
+// >>>>>>>> ESTILOS ESPECÍFICOS PARA EL MODAL DE CONFIRMACIÓN <<<<<<<<
+// Estos estilos sobrescriben los estilos generales de .modal-content para #confirmacionModal
+#confirmacionModal {
+  .modal-content {
+    background-color: #fff; // Fondo blanco
+    border: 1px solid #ccc; // Borde más claro
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); // Sombra suave
+
+    .modal-header {
+      border-bottom: 1px solid #dee2e6; // Borde estándar de Bootstrap
+      .modal-title {
+        color: #333; // Texto oscuro
+      }
+      .btn-close {
+         filter: none; // Asegura que el icono de cerrar no esté invertido en fondo blanco
+      }
+    }
+
+    .modal-body {
+      color: #333; // Texto oscuro en el cuerpo
+      // Puedes ajustar el tamaño del texto o peso si quieres
+      // font-size: 1rem;
+      // font-weight: 400;
+    }
+
+    .modal-footer {
+      border-top: 1px solid #dee2e6; // Borde estándar de Bootstrap
+      // Los estilos de los botones (btn-secondary, btn-primary) dentro del footer
+      // seguirán los estilos generales que ya tienes definidos para .modal-footer .btn
+      // Puedes sobrescribirlos aquí si quieres botones diferentes solo para este modal.
+    }
+  }
+
+  // Si quieres ajustar específicamente los botones de este modal:
+  /*
+  .modal-footer {
+     .btn-secondary {
+       // Estilos para el botón "No, Cancelar" en este modal
+     }
+     .btn-primary {
+       // Estilos para el botón "Sí, Postularme" en este modal
+       background-color: green; // Ejemplo: botón verde para confirmar
+       border-color: green;
+       &:hover {
+         background-color: darkgreen;
+         border-color: darkgreen;
+       }
+     }
+  }
+  */
+}
+
+
+@media (max-width: 768px) {
+  .contenido-principal {
+    margin-left: 70px;
+    padding: 15px;
+  }
+
+  .vacante-item {
+    padding: 12px;
+  }
+
+  .vacante-info {
+    h5 {
+      font-size: 16px;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+
+  .detalles-panel {
+    margin-top: 20px;
+    padding: 15px;
+
+    .detalles-title {
+      font-size: 18px;
+    }
+
+    .section-title {
+      font-size: 15px;
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sidebar-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--active-color);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--color-principal);
+  }
+}

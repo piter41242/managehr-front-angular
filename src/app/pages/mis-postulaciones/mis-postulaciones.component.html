@@ -1,0 +1,71 @@
+<app-menu *ngIf="authService.isAuthenticated()"></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div class="header-horas d-flex justify-content-between align-items-center">
+      <h3>Postulaciones</h3>
+    </div>
+
+    <!-- Barra de búsqueda -->
+
+    <!-- Acordeón de postulaciones -->
+    <div *ngIf="usuarioCargado && [1, 3, 5].includes(usuario.rol); else sinPermiso">
+      <div *ngIf="postulaciones.length > 0; else sinPostulaciones">
+        <div
+          class="accordion-container-simple"
+          *ngFor="let p of postulaciones; trackBy: trackById"
+        >
+          <div class="accordion-item-simple">
+            <div
+              class="accordion-header-simple"
+              (click)="p.expanded = !p.expanded"
+            >
+              <span class="accordion-title-simple">
+                #{{ p.idPostulaciones }} - Vacante: {{ p.vacante?.nomVacante || 'Vacante no encontrada' }}
+              </span>
+              <span class="accordion-icon-simple">
+                <i class="fas" [ngClass]="{ 'fa-chevron-down': !p.expanded, 'fa-chevron-up': p.expanded }"></i>
+              </span>
+            </div>
+            <div class="accordion-body-simple" [class.expanded]="p.expanded">
+              <div class="accordion-row-simple">
+                <div class="row-label-simple">Fecha:</div>
+                <div class="row-value-simple">{{ p.fechaPostulacion }}</div>
+              </div>
+              <div class="accordion-row-simple">
+                <div class="row-label-simple">Estado:</div>
+                <div class="row-value-simple">
+                  <span class="badge"
+                        [ngClass]="{
+                          'badge-pendiente': p.estado === 2,
+                          'badge-complete': p.estado === 1,
+                          'badge-rechazado': p.estado === 3
+                        }">
+                    {{ getNombreEstado(p.estado) }}
+                  </span>
+                </div>
+              </div>
+              <div class="accordion-row-simple">
+                <div class="row-label-simple">Vacante:</div>
+                <div class="row-value-simple">
+                  {{ p.vacante?.nomVacante || 'Vacante no encontrada' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #sinPostulaciones>
+        <div class="alert alert-info">No tienes postulaciones registradas.</div>
+      </ng-template>
+    </div>
+
+    <!-- Si no tiene permiso -->
+    <ng-template #sinPermiso>
+      <div class="alert alert-warning mt-4">
+        No tienes permiso para ver esta información.
+      </div>
+    </ng-template>
+  </div>
+</div>

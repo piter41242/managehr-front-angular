@@ -1,0 +1,132 @@
+<app-menu></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div class="header-horas d-flex justify-content-between align-items-center">
+      <h3>Solicitud de Vacaciones</h3>
+    </div>
+
+    <div class="main-content">
+      <div class="purple-container">
+        <div class="formulario-vacaciones">
+          <h2>Formulario de Petición de Vacaciones</h2>
+          <form
+            class="vacaciones-form"
+            (ngSubmit)="enviarSolicitud()"
+            #vacacionesForm="ngForm"
+          >
+
+            <!-- Motivo -->
+            <div class="form-group">
+              <label for="motivo">Descripción / Motivo:</label>
+              <textarea
+                id="motivo"
+                name="motivo"
+                [(ngModel)]="motivo"
+                required
+                rows="4"
+                class="form-control-match"
+              ></textarea>
+              <div
+                *ngIf="
+                  vacacionesForm.controls['motivo']?.errors?.['required'] &&
+                  vacacionesForm.controls['motivo']?.touched
+                "
+                class="text-danger"
+              >
+                La descripción es obligatoria.
+              </div>
+            </div>
+
+            <!-- Fecha Inicio -->
+            <div class="form-group">
+              <label for="fechaInicio">Fecha Inicio:</label>
+              <input
+                type="date"
+                id="fechaInicio"
+                name="fechaInicio"
+                [(ngModel)]="fechaInicio"
+                required
+                class="form-control-match"
+              />
+              <div
+                *ngIf="
+                  vacacionesForm.controls['fechaInicio']?.errors?.['required'] &&
+                  vacacionesForm.controls['fechaInicio']?.touched
+                "
+                class="text-danger"
+              >
+                La fecha de inicio es obligatoria.
+              </div>
+            </div>
+
+            <!-- Fecha Fin (no puede ser anterior a inicio) -->
+            <div class="form-group">
+              <label for="fechaFinal">Fecha Fin:</label>
+              <input
+                type="date"
+                id="fechaFinal"
+                name="fechaFinal"
+                [(ngModel)]="fechaFinal"
+                required
+                [min]="fechaInicio"
+                class="form-control-match"
+              />
+              <div
+                *ngIf="
+                  vacacionesForm.controls['fechaFinal']?.errors?.['required'] &&
+                  vacacionesForm.controls['fechaFinal']?.touched
+                "
+                class="text-danger"
+              >
+                La fecha de fin es obligatoria.
+              </div>
+              <div
+                *ngIf="
+                  vacacionesForm.controls['fechaFinal']?.errors?.['min'] &&
+                  vacacionesForm.controls['fechaFinal']?.touched
+                "
+                class="text-danger"
+              >
+                La fecha final no puede ser anterior a la de inicio.
+              </div>
+            </div>
+
+            <!-- Contrato (oculto) -->
+            <input
+              type="hidden"
+              name="contratoId"
+              [(ngModel)]="contratoId"
+              #contratoIdModel="ngModel"
+              required
+            />
+
+            <!-- Botón -->
+            <button
+              type="submit"
+              class="btn-submit"
+              [disabled]="vacacionesForm.invalid"
+            >
+              Enviar Solicitud
+            </button>
+          </form>
+        </div>
+
+        <div class="lista-solicitudes">
+          <h2>Solicitudes Enviadas</h2>
+          <ul class="solicitudes-lista">
+            <li *ngFor="let sol of solicitudesVacaciones">
+              <strong>Motivo:</strong> {{ sol.motivo }}<br />
+              <strong>Inicio:</strong> {{ sol.fechaInicio }} |
+              <strong>Fin:</strong> {{ sol.fechaFinal }}<br />
+              <strong>Estado:</strong> {{ sol.estado | titlecase }}
+            </li>
+            <li *ngIf="solicitudesVacaciones.length === 0">
+              No hay solicitudes enviadas aún.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

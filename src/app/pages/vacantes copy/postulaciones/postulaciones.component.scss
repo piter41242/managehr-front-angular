@@ -1,0 +1,385 @@
+/* Import variables if you use them (like color variables) */
+// @import 'variables'; // Adjust the path if needed
+
+.layout {
+  display: flex;
+  height: 100vh;
+  background-color: #202940;
+}
+
+app-menu {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.estado-pendiente {
+  background-color: #ffc107; // Amarillo
+  color: #212529;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.estado-aceptado {
+  background-color: #28a745; // Verde
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.estado-rechazado {
+  background-color: #dc3545; // Rojo
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.contenido-principal {
+  margin-left: 250px; // mismo ancho que el menú
+  padding: 20px;
+  margin-right: 0;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: calc(100% - 250px);
+  display: flex;
+  flex-direction: column;
+  background-color: #55555500;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow-y: auto;
+
+  @media (max-width: 945px) {
+    margin-left: 70px; // si tu menú se reduce a 70px en responsive
+    width: calc(100% - 70px);
+  }
+}
+
+/* body, html { overflow: hidden; } */
+
+.header-horas {
+  background: linear-gradient(
+    90deg,
+    var(--color-principal),
+    var(--active-color)
+  );
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin: 10px 0 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-horas h3 {
+  color: var(--text-hover);
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.header-horas .btn {
+  background: var(--text-hover);
+  color: var(--color-principal);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0px 0px 0px 10px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  border: none;
+  background-color: #1e2131;
+  color: #ffffff;
+  padding: 10px;
+}
+
+.table-dark th {
+  background-color: #040a11;
+  color: white;
+}
+
+/* La regla .table-striped tbody tr:nth-child(odd) que estaba vacía ha sido eliminada para evitar la advertencia emptyRules */
+/* Si deseas filas alternas, añade aquí una nueva regla con estilos no comentados */
+
+.btn-acciones {
+  border: none;
+  background-color: transparent;
+  padding: 0.4rem;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  cursor: pointer;
+  border-radius: 0%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none; /* ** CORREGIDO: Quitar subrayado del enlace ** */
+
+  i {
+    font-size: 1.4rem; // Tamaño por defecto de los iconos
+    color: white;
+  }
+
+  /* Estilo específico para el icono del ojo (para hacerlo un poco más pequeño) */
+  i.fa-eye {
+    font-size: 1.2rem; /* ** CORREGIDO: Tamaño un poco más pequeño para el ojo ** */
+  }
+
+  &.editar i {
+    color: #0d6efd;
+  }
+
+  &.eliminar i {
+    color: #dc3545;
+  }
+
+  &.editar:hover {
+    background-color: rgba(13, 110, 253, 0.1);
+    transform: scale(1.2);
+  }
+
+  &.eliminar:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: white;
+    transform: scale(1.2);
+  }
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 10px;
+  border: 2px solid #0056b3;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #2424248f;
+  border-radius: 10px;
+}
+
+/* Modal styles */
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog-centered {
+  max-width: 600px;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+
+  &:hover {
+    background-color: #c82333;
+  }
+
+  i {
+    pointer-events: none;
+  }
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.modal-content {
+  background-color: #1e2131;
+  border: none;
+  color: #ffffff;
+}
+
+.modal-content .form-control {
+  background-color: #292c3c;
+  border: 0.1px solid #d31a1a00;
+  border-radius: 6px;
+  color: #ffffff;
+}
+
+.modal-content .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff00;
+  color: #ffffff;
+
+  &:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+}
+
+.modal-dialog {
+  max-width: 500px;
+}
+
+.button .btn-close {
+  color: #0069d9;
+}
+
+.card {
+  background-color: #1e2131;
+  color: #ffffff;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
+  .card-body {
+    background-color: #1e2131;
+  }
+
+  .card-footer {
+    background-color: #040a11;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .btn-outline-primary,
+  .btn-outline-danger {
+    border-color: #ffffff33;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #ffffff11;
+    }
+  }
+}
+
+@media (max-width: 945px) {
+  #sinPermiso {
+    display: none;
+  }
+}
+
+/* Styles for card-like responsive table on small screens */
+/* Based on the visual example of the Usuarios table on small screens */
+@media (max-width: 768px) {
+  /* Adjust breakpoint if needed to match when your users table changes */
+
+  .table {
+    border: none; /* Remove table border in card view */
+    margin-bottom: 1.5rem; /* Add space between cards */
+  }
+
+  .table thead {
+    /* Hide table header in card view */
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .table tr {
+    /* Style table rows as cards */
+
+    display: block; /* Make row a block element */
+    margin-bottom: 0.625em; /* Space between rows */
+    background-color: #1e2131; /* Card background */
+    padding: 1rem; /* Card padding */
+    border-radius: 8px; /* Card rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Card shadow */
+  }
+
+  .table td {
+    /* Style table data cells */
+    border-bottom: none; /* Eliminada la línea divisoria */
+    display: block; /* Make cell a block element */
+    font-size: 0.9em; /* Adjust font size */
+    text-align: left; /* Alinear texto a la izquierda */
+    padding-left: 1rem; /* Adjust padding */
+    padding-right: 1rem; // Add padding on the right
+    position: relative; // Needed for :before absolute positioning
+    margin-bottom: 0.5rem; // Add space below each data item
+  }
+
+  .table td::before {
+    content: attr(data-label) ""; /* Add colon and space after label */
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-right: 0.5rem; /* Space after label */
+    color: #bbb; // Example label color
+    vertical-align: top; // Align label to the top if value wraps
+  }
+
+  /* Specific adjustments for the actions column */
+  .table td:last-child {
+    border-bottom: 0; /* No border below the last data item */
+    text-align: left; /* Alinear botones de acción a la izquierda */
+    padding-left: 1rem;
+    padding-right: 1rem; // Match other cells
+    margin-top: 1rem; // Add space above action buttons
+    margin-bottom: 0; // No margin below
+  }
+
+  .btn-acciones {
+    margin: 0 5px; // Add some space between action buttons
+    font-size: 1rem; // Adjust icon size if needed in card view
+  }
+}
+
+.contenido-principal {
+  .mb-3 {
+    input.form-control {
+      background-color: #1d2233;
+      color: white;
+      border: 1px solid #7a86a1;
+
+      // Opcional: Estilizar también el texto del placeholder
+      &::placeholder {
+        color: #cccccc; // Un tono de blanco más claro para mejor contraste/visibilidad
+        opacity: 1; // Asegura que el placeholder sea visible
+      }
+    }
+  }
+}
+#tituloTargetas1 {
+  background-color: #0d6efd; /* Bootstrap primary */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+#tituloTargetas1 button {
+  height: 40px;
+  width: 200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+select{
+  cursor: pointer;
+}

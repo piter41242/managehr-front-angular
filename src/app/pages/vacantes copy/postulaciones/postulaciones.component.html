@@ -1,0 +1,415 @@
+<app-menu *ngIf="authService.isAuthenticated()"></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div
+      id="tituloTargetas1"
+      class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center flex-wrap gap-2 mb-3"
+    >
+      <h3 class="mb-2 mb-md-0">Gestión de Postulaciones</h3>
+
+      <div
+        class="d-flex flex-wrap gap-2 justify-content-start justify-content-md-end"
+      >
+        <button
+          class="btn btn-warning btn-sm d-flex align-items-center"
+          (click)="abrirModalReportePostulaciones()"
+        >
+          <i class="fas fa-chart-pie me-2"></i> Reportes por Vacantes
+        </button>
+        <button
+          class="btn btn-secondary btn-sm d-flex align-items-center"
+          (click)="abrirModalReporteEstado()"
+        >
+          <i class="fas fa-chart-bar me-2"></i> Reportes por Estado
+        </button>
+        <button
+          class="btn btn-info btn-sm d-flex align-items-center"
+          (click)="abrirModalReporteInternos()"
+        >
+          <i class="fas fa-users me-2"></i> Reportes Empleados
+        </button>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar por nombre, documento o vacante..."
+        [(ngModel)]="filtroPostulacion"
+      />
+    </div>
+
+    <div *ngIf="[1, 4].includes(usuario?.rol); else sinPermiso">
+      <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre del Postulante</th>
+            <th>Documento</th>
+            <th>Vacante</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of postulacionesFiltradasPaginadas">
+            <td data-label="Nombre del Postulante:">
+              {{ p.usuario?.primerNombre }} {{ p.usuario?.primerApellido }}
+            </td>
+            <td data-label="Documento:">
+              {{ p.numDocumento }}
+            </td>
+            <td data-label="Vacante:">
+              {{ p.vacante?.nomVacante }}
+            </td>
+            <td data-label="Fecha:">
+              {{ p.fecha_formateada }}
+            </td>
+            <td data-label="Estado">
+              <span
+                [ngClass]="{
+                  'estado-pendiente': p.estado === 2,
+                  'estado-aceptado': p.estado === 1,
+                  'estado-rechazado': p.estado === 3
+                }"
+              >
+                {{ obtenerNombreEstado(p.estado) }}
+              </span>
+            </td>
+
+            <td>
+              <!-- Botón Ver (ícono de ojo) -->
+              <button
+                class="btn btn-outline-info btn-sm me-1"
+                data-bs-toggle="modal"
+                data-bs-target="#verDetallesModal"
+                (click)="postulacionSeleccionada = p"
+                title="Ver Detalles"
+              >
+                <i class="bi bi-eye"></i>
+              </button>
+
+              <!-- Botón Editar (ícono de lápiz) -->
+              <button
+                class="btn btn-outline-warning btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#editarEstadoModal"
+                (click)="postulacionSeleccionada = p"
+                title="Editar Estado"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <nav *ngIf="totalPages > 1">
+        <ul class="pagination justify-content-center mt-3">
+          <li class="page-item" [class.disabled]="paginaActual === 1">
+            <a class="page-link" (click)="cambiarPagina(paginaActual - 1)"
+              >Anterior</a
+            >
+          </li>
+
+          <li
+            class="page-item"
+            *ngFor="let page of paginasParaMostrar()"
+            [class.active]="page === paginaActual"
+          >
+            <a
+              class="page-link"
+              *ngIf="page !== -1; else puntos"
+              (click)="cambiarPagina(page)"
+            >
+              {{ page }}
+            </a>
+          </li>
+
+          <ng-template #puntos>
+            <span class="page-link">...</span>
+          </ng-template>
+          <li class="page-item" [class.disabled]="paginaActual === totalPages">
+            <a class="page-link" (click)="cambiarPagina(paginaActual + 1)"
+              >Siguiente</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div *ngIf="postulaciones.length === 0" class="alert alert-info mt-3">
+        No se encontraron postulaciones.
+      </div>
+    </div>
+
+    <ng-template #sinPermiso>
+      <div class="alert alert-warning">
+        No tienes permiso para ver esta información.
+      </div>
+    </ng-template>
+    <!-- Modal Reporte Internos -->
+    <div
+      class="modal fade"
+      id="modalReporteInternos"
+      tabindex="-1"
+      aria-labelledby="modalInternosLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="modalInternosLabel">
+              Reporte de Postulaciones Internas (Empleados)
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex justify-content-end mb-3 gap-2">
+              <button
+                class="btn btn-outline-danger"
+                (click)="descargarPDFInternos()"
+              >
+                <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+              </button>
+              <button
+                class="btn btn-outline-success"
+                (click)="descargarExcelInternos()"
+              >
+                <i class="bi bi-file-earmark-excel-fill"></i> Excel
+              </button>
+            </div>
+
+            <!-- Gráfico -->
+            <div class="text-center">
+              <canvas id="graficoInternos" width="600" height="300"></canvas>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Modal por estado-->
+    <div
+      class="modal fade"
+      id="modalReporteEstado"
+      tabindex="-1"
+      aria-labelledby="modalReporteEstadoLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title" id="modalReporteEstadoLabel">
+              📊 Reporte de Postulaciones por Estado
+            </h5>
+            <button
+              type="button"
+              class="btn-close bg-white"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="text-center my-4">
+              <canvas
+                id="graficoEstados"
+                style="max-width: 100%; height: 400px"
+              ></canvas>
+            </div>
+          </div>
+
+          <div class="modal-footer d-flex justify-content-between">
+            <div>
+              <button
+                class="btn btn-success"
+                (click)="descargarExcelPorEstado()"
+              >
+                📥 Excel
+              </button>
+              <button class="btn btn-danger" (click)="descargarPDFPorEstado()">
+                📄 PDF
+              </button>
+            </div>
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Editar Estado -->
+    <div
+      class="modal fade"
+      id="editarEstadoModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Estado</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form
+              *ngIf="postulacionSeleccionada"
+              (ngSubmit)="guardarEstadoPostulacion()"
+            >
+              <label>Estado</label>
+              <select
+                [(ngModel)]="postulacionSeleccionada.estado"
+                name="estado"
+                class="form-control"
+                required
+              >
+                <option [ngValue]="2">Pendiente</option>
+                <option [ngValue]="1">Aceptado</option>
+                <option [ngValue]="3">Rechazado</option>
+              </select>
+
+              <button type="submit" class="btn btn-primary mt-3">
+                Guardar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal principal de Reportes de Postulaciones -->
+    <div
+      class="modal fade"
+      id="modalReportePostulaciones"
+      tabindex="-1"
+      aria-labelledby="modalReportePostulacionesLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="modalReportePostulacionesLabel">
+              📊 Reportes de Postulaciones
+            </h5>
+            <button
+              type="button"
+              class="btn-close bg-white"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="mb-3 d-flex gap-2 flex-wrap">
+              <button
+                class="btn btn-outline-dark"
+                (click)="abrirModalReportePostulaciones()"
+              >
+                Por Vacante
+              </button>
+              <button
+                class="btn btn-outline-dark"
+                (click)="abrirModalReportePostulaciones()"
+              >
+                Por Estado
+              </button>
+              <button
+                class="btn btn-outline-dark"
+                (click)="abrirModalReportePostulaciones()"
+              >
+                Por Empleado Interno
+              </button>
+            </div>
+
+            <div class="text-center my-4">
+              <canvas
+                id="graficoVacantes"
+                style="max-width: 100%; height: 400px"
+              ></canvas>
+            </div>
+          </div>
+
+          <div class="modal-footer d-flex justify-content-between">
+            <div>
+              <button
+                class="btn btn-success"
+                (click)="descargarExcelVacantes()"
+              >
+                📥 Excel
+              </button>
+              <button class="btn btn-danger" (click)="descargarPDFVacantes()">
+                📄 PDF
+              </button>
+            </div>
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Ver Detalles -->
+    <div
+      class="modal fade"
+      id="verDetallesModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Detalles de Postulación</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" *ngIf="postulacionSeleccionada">
+            <p>
+              <strong>ID:</strong>
+              {{ postulacionSeleccionada.idPostulaciones }}
+            </p>
+            <p>
+              <strong>Fecha:</strong>
+              {{ postulacionSeleccionada.fecha_formateada }}
+            </p>
+            <p><strong>Estado:</strong> {{ postulacionSeleccionada.estado }}</p>
+            <p>
+              <strong>Vacante:</strong>
+              {{ postulacionSeleccionada.vacante?.nomVacante }}
+            </p>
+            <p>
+              <strong>Salario:</strong>
+              {{ postulacionSeleccionada.vacante?.salario | currency : "COP" }}
+            </p>
+            <p>
+              <strong>Descripción:</strong>
+              {{ postulacionSeleccionada.vacante?.descripVacante }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

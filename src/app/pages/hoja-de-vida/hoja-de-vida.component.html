@@ -1,0 +1,346 @@
+<app-menu class="menu-lateral"></app-menu>
+
+<div class="layout">
+  <div class="contenido-principal">
+    <div class="header-horas d-flex justify-content-between align-items-center">
+      <h3>Hoja de Vida</h3>
+    </div>
+
+    <div class="profile-container">
+      <div class="profile-info">
+        <div class="user-data" *ngIf="hojaDeVida">
+          <h4 class="data-title">
+            Libreta Militar
+            <button class="btn-editar" (click)="abrirModalEditarLibreta()">
+              <i class="fas fa-edit"></i>
+            </button>
+          </h4>
+          <div class="data-grid">
+            <div class="grid-item">
+              <span class="label">Clase Libreta Militar:</span>
+              <span class="value">{{
+                hojaDeVida.claseLibretaMilitar || "No registrado"
+              }}</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Número de Libreta:</span>
+              <span class="value">{{
+                hojaDeVida.numeroLibretaMilitar || "No registrado"
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal editar libreta -->
+        <div class="modal-overlay" *ngIf="mostrarModalEditarLibreta">
+          <div class="modal-content">
+            <h2>Editar Libreta Militar</h2>
+            <form (ngSubmit)="guardarCambiosLibreta()">
+              <div class="form-group">
+                <label>Clase Libreta Militar</label>
+                <input
+                  type="text"
+                  [(ngModel)]="hojaDeVida.claseLibretaMilitar"
+                  name="clase"
+                  required
+                  (keypress)="soloLetras($event)"
+                />
+              </div>
+              <div class="form-group">
+                <label>Número de Libreta</label>
+                <input
+                  type="text"
+                  [(ngModel)]="hojaDeVida.numeroLibretaMilitar"
+                  name="numero"
+                  required
+                  (keypress)="soloNumeros($event)"
+                />
+              </div>
+              <div class="modal-buttons">
+                <button type="submit">Guardar</button>
+                <button type="button" (click)="cerrarModalEditarLibreta()">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ESTUDIOS -->
+        <div class="user-data">
+          <h4 class="data-title">
+            Estudios
+            <button class="btn-agregar" (click)="abrirModalAgregarEstudio()">
+              <i class="fas fa-plus"></i> Agregar
+            </button>
+          </h4>
+
+          <div *ngIf="estudios.length === 0" class="empty-message">
+            No se han registrado estudios.
+          </div>
+
+          <div
+            *ngFor="let estudio of estudios; let i = index"
+            class="accordion"
+          >
+            <div class="accordion-header" (click)="toggleEstudio(i)">
+              {{ estudio.nomEstudio }}
+              <div class="accordion-buttons">
+                <button (click)="editarEstudio(i); $event.stopPropagation()">
+                  Editar
+                </button>
+                <button (click)="eliminarEstudio(i); $event.stopPropagation()">
+                  Eliminar
+                </button>
+              </div>
+            </div>
+            <div *ngIf="estudio.abierto" class="accordion-body">
+              <div class="grid-item">
+                <span class="label">Institución:</span>
+                <span class="value">{{ estudio.nomInstitucion }}</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Título Obtenido:</span>
+                <span class="value">{{ estudio.tituloObtenido }}</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Año Inicio:</span>
+                <span class="value">{{
+                  estudio.anioInicio | date : "yyyy"
+                }}</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Año Finalización:</span>
+                <span class="value">{{
+                  estudio.anioFinalizacion | date : "yyyy"
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal agregar estudio -->
+        <div class="modal-overlay" *ngIf="mostrarModalAgregarEstudio">
+          <div class="modal-content">
+            <h2>Agregar Estudio</h2>
+            <form (ngSubmit)="guardarNuevoEstudio()">
+              <div class="form-group">
+                <label>Nombre del Estudio</label>
+                <input
+                  type="text"
+                  [(ngModel)]="nuevoEstudio.nomEstudio"
+                  name="nomEstudio"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Institución</label>
+                <input
+                  type="text"
+                  [(ngModel)]="nuevoEstudio.nomInstitucion"
+                  name="nomInstitucion"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Título Obtenido</label>
+                <input
+                  type="text"
+                  [(ngModel)]="nuevoEstudio.tituloObtenido"
+                  name="tituloObtenido"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Año Inicio</label>
+                <input
+                  type="date"
+                  [(ngModel)]="nuevoEstudio.anioInicio"
+                  name="anioInicio"
+                />
+              </div>
+              <div class="form-group">
+                <label>Año Finalización</label>
+                <input
+                  type="date"
+                  [(ngModel)]="nuevoEstudio.anioFinalizacion"
+                  name="anioFinalizacion"
+                />
+              </div>
+              <div class="form-group">
+                <label>Archivo soporte</label>
+                <input type="file" (change)="onArchivoSeleccionadoEstudio($event)" />
+              </div>
+              <div class="modal-buttons">
+                <button type="submit">Guardar</button>
+                <button type="button" (click)="cerrarModalAgregarEstudio()">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="user-data">
+          <h4 class="data-title">
+            Experiencia Laboral
+            <button
+              class="btn-agregar"
+              (click)="abrirModalAgregarExperiencia()"
+            >
+              <i class="fas fa-plus"></i> Agregar
+            </button>
+          </h4>
+
+          <div *ngIf="experiencias.length === 0" class="empty-message">
+            No se ha registrado experiencia laboral.
+          </div>
+
+          <div
+            *ngFor="let exp of experiencias; let i = index"
+            class="accordion"
+          >
+            <div class="accordion-header" (click)="toggleExperiencia(i)">
+              {{ exp.nomEmpresa }}
+              <div class="accordion-buttons">
+                <button
+                  (click)="editarExperiencia(i); $event.stopPropagation()"
+                >
+                  Editar
+                </button>
+                <button
+                  (click)="eliminarExperiencia(i); $event.stopPropagation()"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+            <div *ngIf="exp.abierto" class="accordion-body">
+              <div class="grid-item">
+                <span class="label">Nombre del Jefe:</span>
+                <span class="value">{{ exp.nomJefe }}</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Teléfono:</span>
+                <span class="value">{{ exp.telefono }}</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Cargo:</span>
+                <span class="value">{{ exp.cargo }}</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Actividades:</span>
+                <span class="value">{{ exp.actividades }}</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Fecha Inicio:</span>
+                <span class="value">{{
+                  exp.fechaInicio | date : "yyyy-MM-dd"
+                }}</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Fecha Finalización:</span>
+                <span class="value">{{
+                  exp.fechaFinalizacion | date : "yyyy-MM-dd"
+                }}</span>
+              </div>
+              <div class="grid-item" *ngIf="exp.archivo">
+                <span class="label">Archivo Soporte:</span>
+                <a
+                  class="value"
+                  [href]="'http://localhost:8000/storage/' + exp.archivo"
+                  target="_blank"
+                  >Ver archivo</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal agregar experiencia -->
+        <div class="modal-overlay" *ngIf="mostrarModalAgregarExperiencia">
+          <div class="modal-content">
+            <h2>Agregar Experiencia</h2>
+            <form (ngSubmit)="guardarNuevaExperiencia()">
+              <div class="form-group">
+                <label>Empresa</label>
+                <input
+                  type="text"
+                  [(ngModel)]="nuevaExperiencia.nomEmpresa"
+                  name="nomEmpresa"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Jefe Inmediato</label>
+                <input
+                  type="text"
+                  [(ngModel)]="nuevaExperiencia.nomJefe"
+                  name="nomJefe"
+                  required
+                  (keypress)="soloLetras($event)"
+                />
+              </div>
+              <div class="form-group">
+                <label>Teléfono</label>
+                <input
+                  type="text"
+                  [(ngModel)]="nuevaExperiencia.telefono"
+                  name="telefono"
+                  required
+                  (keypress)="soloNumeros($event)"
+                />
+              </div>
+              <div class="form-group">
+                <label>Cargo</label>
+                <input
+                  type="text"
+                  [(ngModel)]="nuevaExperiencia.cargo"
+                  name="cargo"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Actividades</label>
+                <textarea
+                  [(ngModel)]="nuevaExperiencia.actividades"
+                  name="actividades"
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label>Fecha Inicio</label>
+                <input
+                  type="date"
+                  [(ngModel)]="nuevaExperiencia.fechaInicio"
+                  name="fechaInicio"
+                />
+              </div>
+              <div class="form-group">
+                <label>Fecha Finalización</label>
+                <input
+                  type="date"
+                  [(ngModel)]="nuevaExperiencia.fechaFinalizacion"
+                  name="fechaFinalizacion"
+                />
+              </div>
+              <div class="form-group">
+                <label>Archivo soporte</label>
+                <input
+                  type="file"
+                  (change)="onArchivoSeleccionado($event)"
+                  required
+                />
+              </div>
+              <div class="modal-buttons">
+                <button type="submit">Guardar</button>
+                <button type="button" (click)="cerrarModalAgregarExperiencia()">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

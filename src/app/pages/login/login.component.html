@@ -1,0 +1,63 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="form-section">
+      <form (ngSubmit)="login()" #loginForm="ngForm" class="h-100 d-flex flex-column align-items-center justify-content-center p-4">
+        <h1 class="mb-4">Iniciar Sesión</h1>
+        <div class="social-icons mb-3">
+          <a href="#" class="social-icon"><i class='bx bxl-facebook'></i></a>
+          <a href="#" class="social-icon"><i class='bx bxl-google'></i></a>
+          <a href="#" class="social-icon"><i class='bx bxl-linkedin'></i></a>
+          <a href="#" class="social-icon"><i class='bx bxl-github'></i></a>
+        </div>
+
+        <span class="text-muted small mb-3">Conoce nuestras Redes Sociales</span>
+
+        <div class="form-floating mb-3 w-100">
+          <input
+            type="email"
+            class="form-control"
+            id="loginEmail"
+            placeholder=""
+            [(ngModel)]="email"
+            name="email"
+            required
+          />
+          <label for="loginEmail">Correo electrónico</label>
+        </div>
+
+        <div class="form-floating mb-3 w-100">
+          <input
+            type="password"
+            class="form-control"
+            id="loginPassword"
+            placeholder=""
+            [(ngModel)]="password"
+            name="password"
+            required
+          />
+          <label for="loginPassword">Contraseña</label>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger w-100 py-2 px-3 small" role="alert">
+          {{ errorMessage }}
+        </div>
+
+        <a  (click)="mostrarAlerta()" class="olvidar text-decoration-none small mb-3">
+          ¿Olvidaste tu contraseña?
+        </a>
+        <button type="submit" class="btn btn-primary px-4 py-2">Iniciar Sesión</button>
+      </form>
+    </div>
+
+    <!-- Sección de bienvenida -->
+    <div class="welcome-section">
+      <h2>¡Bienvenido!</h2>
+      <p>Impulsa tu potencial, construye tu futuro con nosotros.</p>
+      <!-- Botón que redirige a /register -->
+
+      <button class="btn btn-outline-light mt-3" [routerLink]="['/register']">
+        Ver Ofertas Laborales
+      </button>
+    </div>
+  </div>
+</div>
